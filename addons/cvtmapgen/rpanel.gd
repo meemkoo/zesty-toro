@@ -36,10 +36,7 @@ func handle_child(node: Node):
 			assign_data(node, cfg[node.name])
 
 func save() -> void:
-	print("Saving")
-	print(inputs["mapsources"].text)
 	cfg["mapsources"] = inputs["mapsources"].text
-	print(cfg["mapsources"])
 	var file = FileAccess.open(CFG_PATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(cfg))
 

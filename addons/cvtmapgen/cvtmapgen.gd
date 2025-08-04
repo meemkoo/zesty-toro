@@ -5,8 +5,6 @@ var rpanel = preload("res://addons/cvtmapgen/rpanel.tscn")
 var rpanel_inst: Control
 
 func _enter_tree() -> void:
-	print("Yeah we entering")
-	
 	rpanel_inst = rpanel.instantiate()
 	add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_UL, rpanel_inst)
 
