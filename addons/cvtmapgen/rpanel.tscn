@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfx7uoe5f8oil"]
+
+[ext_resource type="Script" uid="uid://bcfubv750avek" path="res://addons/cvtmapgen/rpanel.gd" id="1_gxqc0"]
+
+[node name="CVTM" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gxqc0")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Map Sources"
+
+[node name="mapsources" type="TextEdit" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 23.0
+offset_bottom = 110.0
+grow_horizontal = 2
+
+[node name="Save" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 122.0
+offset_bottom = 153.0
+grow_horizontal = 2
+text = "Save"
+
+[node name="Terminal" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Open Terminal"
+
+[connection signal="pressed" from="Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Terminal" to="." method="_on_open_terminal"]
