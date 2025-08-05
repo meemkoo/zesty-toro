@@ -5,7 +5,8 @@ const CFG_PATH = "res://cvtm.json"
 var cfg: Dictionary
 
 var inputs: Dictionary = {
-	"mapsources": null
+	"mapsources": null,
+	"mapoutput": null
 }
 
 func _on_save_pressed() -> void:
@@ -37,9 +38,14 @@ func handle_child(node: Node):
 
 func save() -> void:
 	cfg["mapsources"] = inputs["mapsources"].text
+	cfg["mapoutput"] = inputs["mapoutput"].text
 	var file = FileAccess.open(CFG_PATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(cfg))
 
 
 func _on_open_terminal() -> void:
-	OS.execute("C:\\Program Files\\Git\\git-bash.exe", ["--cd-to-home"])
+	pass # OS.execute("C:\\Program Files\\Git\\git-bash.exe", ["--cd-to-home"])
+
+
+func bake() -> void:
+	pass # Replace with function body.
