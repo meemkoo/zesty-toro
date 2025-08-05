@@ -17,22 +17,23 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 23.0
 grow_horizontal = 2
-text = "Map Sources"
+text = "Maps Path"
 
 [node name="mapsources" type="TextEdit" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_top = 23.0
-offset_bottom = 110.0
+offset_bottom = 63.0
 grow_horizontal = 2
+text = "maps"
 
 [node name="Save" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 122.0
-offset_bottom = 153.0
+offset_top = 72.0
+offset_bottom = 103.0
 grow_horizontal = 2
 text = "Save"
 
@@ -46,6 +47,10 @@ offset_top = -8.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Open Terminal"
+
+[node name="ReqSaveConfig" type="AcceptDialog" parent="."]
+initial_position = 1
+dialog_text = "Save CVTM config before exit?"
 
 [connection signal="pressed" from="Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Terminal" to="." method="_on_open_terminal"]
