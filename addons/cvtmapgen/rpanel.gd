@@ -42,10 +42,8 @@ func save() -> void:
 	var file = FileAccess.open(CFG_PATH, FileAccess.WRITE)
 	file.store_string(JSON.stringify(cfg))
 
+func propogate_cfg():
+	$"GennyAWarnerKrishikov".setcfg(cfg)
 
 func _on_open_terminal() -> void:
 	pass # OS.execute("C:\\Program Files\\Git\\git-bash.exe", ["--cd-to-home"])
-
-
-func bake() -> void:
-	pass # Replace with function body.

@@ -1,0 +1,154 @@
+[gd_scene load_steps=6 format=3 uid="uid://cpplexviiunip"]
+
+[ext_resource type="PackedScene" uid="uid://bpuqpj1f51aed" path="res://eventest/evenflow2.fbx" id="1_lease"]
+
+[sub_resource type="GDScript" id="GDScript_hmeil"]
+resource_name = "test_e"
+script/source = "extends Node3D
+
+
+const NORTH = 1<<3
+const WEST = 1<<2
+const EAST = 1<<1
+const SOUTH = 1<<0
+
+var scummap: Dictionary = JSON.parse_string(FileAccess.open(\"res://eventest/scummap.json\", FileAccess.READ).get_as_text())
+
+@onready
+var evenflow: Node = $\"evenflow2\"
+
+@onready
+var image: Image = load(\"res://eventest/testmap.png\").get_image()
+
+func get_cell(mapinfo: Array, x: int, y: int, height: int, width: int):
+	if (x >= 0 and x < width) and (y >= 0 and y < height):
+		return mapinfo[x][y]
+	else:
+		return \"oob\"
+
+func get_all_adjacent(mapinfo: Array, 
+					  x: int, y: int, 
+					  height: int, width: int,
+					  corners: bool=true) -> Array:
+	# Follows pattern of
+	# 0 1 2
+	# 3 X 4
+	# 5 6 7
+	
+	# N, W, E, S, for no corners
+	if corners:
+		return [
+			get_cell(mapinfo,x-1,y+1,height,width),
+			get_cell(mapinfo,x,y+1,height,width),
+			get_cell(mapinfo,x+1,y+1,height,width),
+			
+			get_cell(mapinfo,x-1,y,height,width),
+			get_cell(mapinfo,x+1,y,height,width),
+			
+			get_cell(mapinfo,x-1,y-1,height,width),
+			get_cell(mapinfo,x,y-1,height,width),
+			get_cell(mapinfo,x+1,y-1,height,width)
+		]
+	else:
+		return [
+			get_cell(mapinfo,x,y+1,height,width),
+
+			get_cell(mapinfo,x-1,y,height,width),
+			get_cell(mapinfo,x+1,y,height,width),
+
+			get_cell(mapinfo,x,y-1,height,width),
+
+		]
+
+func binary_adj(adj_to: Array, zero, one) -> int:
+	var adj_mask = 0
+	for i in range(adj_to.size()-1, -1, -1):
+		var cell = adj_to[i]
+		if cell == zero:
+			adj_mask |= 1<<i
+	return !adj_mask
+
+func img2premap(img: Image) -> Array:
+	print(img.get_height())
+	print(img.get_width())
+	var arrayonce = []
+	for i in range(0, img.get_width()):
+		var cwbb = []
+		# This iterator is nececcary to flip the image so zero**2 is intuitive
+		for j in range(img.get_height()-1, -1, -1):
+			var t = null
+			match img.get_pixel(i, j):
+				Color(\"ffffff\"):
+					t = \"space\"
+				Color(\"ff0000\"):
+					t = \"wred\"
+				Color(\"00ff00\"):
+					t = \"grean\"
+				Color(\"0000ff\"):
+					t = \"vloo\"
+				Color(\"000000\"):
+					t = \"none\"
+				_:
+					t = \"err\"
+			cwbb.append(t)
+		arrayonce.append(cwbb)
+	return arrayonce
+
+
+func _ready() -> void:
+	var wroot: Node3D = Node3D.new()
+	var wallbase: MeshInstance3D = $evenflow2/WallBase
+
+	var premap = img2premap(image)
+	var premap_width = len(premap)
+	var premap_height = len(premap[0])
+	
+	print(get_cell(premap, premap_width-1, premap_height-1, premap_height, premap_width))
+	print(get_all_adjacent(premap, 1, 1, premap_height, premap_width))
+	print(get_all_adjacent(premap, 1, 1, premap_height, premap_width, false))
+
+	var wad = []
+	for x in range(premap_width):
+		var tmp = []
+		for y in range(premap_height):
+			var cell = premap[x][y]
+			# var adj = get_all_adjacent(premap, x, y, premap_height, premap_width, false)
+			if cell == \"space\":
+				var adj = get_all_adjacent(premap, x, y, premap_height, premap_width, false)
+				print(str(binary_adj(adj, \"none\", \"space\")), \" \", scummap[str(binary_adj(adj, \"none\", \"space\"))], \"\\t\\t\", x, \" \", y)
+			tmp.append([x, y, cell])
+		wad.append(tmp)
+	
+
+	add_child(wroot)
+	pass
+"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lease"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_hmeil"]
+sky_material = SubResource("ProceduralSkyMaterial_lease")
+
+[sub_resource type="Environment" id="Environment_3uwfw"]
+background_mode = 2
+sky = SubResource("Sky_hmeil")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="TestE" type="Node3D"]
+script = SubResource("GDScript_hmeil")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3uwfw")
+
+[node name="evenflow2" parent="." instance=ExtResource("1_lease")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.81702, 0)
+omni_range = 20.903
+omni_attenuation = 4.567
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.66038)
