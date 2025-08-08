@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://bl5q7gb4ght6i"]
+
+[ext_resource type="PackedScene" uid="uid://c48nc2xncmgmt" path="res://Character/Character.tscn" id="1_7tcqs"]
+
+[node name="MovementTest" type="Node3D"]
+
+[node name="Character" parent="." instance=ExtResource("1_7tcqs")]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.48462, -2.42924, -7.17728)
+use_collision = true
+size = Vector3(24.022, 1, 19.3587)
